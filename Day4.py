@@ -15,3 +15,11 @@ print(contain_count)
 
 # PART 2
 
+overlapping_pair_count = len(assignment_pairs)
+
+for pair in assignment_pairs:
+    if (pair[1] - pair[2]) < 0 or (pair[3] - pair[0]) < 0:
+        overlapping_pair_count -= 1
+
+print(overlapping_pair_count)
+
