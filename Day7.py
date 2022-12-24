@@ -25,7 +25,8 @@ class DirectoriesTree:
 
         included_nodes = list(range(tree_size))[self.index:current_node+1]
 
-        return sum([tree_dict[node].get_directory_size() for node in included_nodes])
+        return sum([tree_dict[node].get_directory_local_size() for node in included_nodes])
+
 
 with open("PuzzleInput7") as f:
     lines = f.read()
@@ -56,8 +57,15 @@ for i, match in enumerate(re.finditer("\$ ls", lines)):
     directories[i].files = directory_files
     directories[i].name = lines[lines.rfind("$", 0, match.start())+5:match.start()-1]
 
-for node in directories.values():
-    print(node.get_directory_total_size(len(directories), directories))
+total = 0
+
+for directory in directories.values():
+    directory_total_size = directory.get_directory_total_size(len(directories), directories)
+    print(directory_total_size, directory.index, directory_content)
+    if directory_total_size <= 100000:
+        total += directory_total_size
+
+print(total)
 
 
 
