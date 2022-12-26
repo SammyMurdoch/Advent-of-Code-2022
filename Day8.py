@@ -1,53 +1,46 @@
 import numpy as np
 
 
-def find_visible_tree(tree_array, observation_direction, row_index):
+def find_visible_tree(tree_array, observation_direction, row_index, visible_trees):
     if observation_direction == "left":
         observed_tree_index = np.argmax(tree_array)
         visible_trees[row_index, observed_tree_index] = True
 
-        return tree_array[:observed_tree_index]
+        return tree_array[:observed_tree_index], visible_trees
 
     local_observed_tree_index = np.argmax(np.flip(tree_array))
     observed_tree_index = side_length - local_observed_tree_index - 1
 
     visible_trees[row_index, observed_tree_index] = True
 
-    return tree_array[len(tree_array)-local_observed_tree_index:]
+    return tree_array[len(tree_array)-local_observed_tree_index:], visible_trees
 
 
-def update_visible_trees(tree_heights):
+def update_visible_trees(tree_heights, visible_trees):
     for i, row in enumerate(tree_heights):
-        left_array = find_visible_tree(row, "left", i)
-        right_array = find_visible_tree(row, "right", i)
+        left_array, visible_trees = find_visible_tree(row, "left", i, visible_trees)
+        right_array, visible_trees = find_visible_tree(row, "right", i, visible_trees)
 
         while len(left_array) != 0:
-            left_array = find_visible_tree(left_array, "left", i)
+            left_array, visible_trees = find_visible_tree(left_array, "left", i, visible_trees)
 
         while len(right_array) != 0:
-            right_array = find_visible_tree(right_array, "right", i)
+            right_array, visible_trees = find_visible_tree(right_array, "right", i, visible_trees)
+
+    return visible_trees
 
 
 with open("PuzzleInput8") as f:
     grid_array = np.array([list(d) for d in f.read().split("\n")]).astype(int)
 
-visible_trees = np.full(grid_array.shape, False)
-side_length = visible_trees.shape[0]
+horizontal_visible_trees = np.full(grid_array.shape, False)
+vertical_visible_trees = np.full(grid_array.shape, False)
 
-# update_visible_trees(grid_array)
-# print(visible_trees)
-update_visible_trees(grid_array)
+side_length = horizontal_visible_trees.shape[0]
 
-print(visible_trees)
+horizontal_visible_trees = update_visible_trees(grid_array, horizontal_visible_trees)
+vertical_visible_trees = update_visible_trees(grid_array.transpose(), vertical_visible_trees).transpose()
 
+visible_tree_count = np.logical_or(horizontal_visible_trees, vertical_visible_trees).sum()
 
-
-# # #TODO TREES OF HEIGHT 0?
-# #
-# # import numpy as np
-# # hi = np.array([1, 3, 2, 2, 3])
-# #
-# # yo = np.argmax(np.flip(hi))
-# # yo2 = np.argmax(hi)
-# #
-# # print(hi, yo, yo2)
+print(visible_tree_count)
