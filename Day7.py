@@ -61,14 +61,10 @@ total = 0
 
 for directory in directories.values():
     directory_total_size = directory.get_directory_total_size(len(directories), directories)
-    print(directory_total_size, directory.index, directory_content)
-    if directory_total_size <= 100000:
-        total += directory_total_size
+    print(directory.index, directory.name, directory_total_size, directory.files, directory.directories)
+    # if directory_total_size <= 100000:
+    #     total += directory_total_size
 
 print(total)
-
-
-
-
 
 
