@@ -30,6 +30,34 @@ def update_visible_trees(tree_heights, visible_trees):
     return visible_trees
 
 
+def get_viewing_distance(tree_heights, i, direction):
+    current_tree_index = i + direction
+    tallest_tree = tree_heights[current_tree_index]
+    viewing_distance = 0
+
+    while tallest_tree < tree_heights[i] and (0 <= current_tree_index < len(tree_heights)-1):
+        current_tree_index += direction
+
+        tallest_tree = tree_heights[current_tree_index]
+        viewing_distance += 1
+
+    return viewing_distance
+
+
+def get_viewing_distance_products(row):
+    right_viewing_distances = np.array([get_viewing_distance(row, i, 1) for i in range(0, len(row)-1)] + [0])
+    left_viewing_distances = np.array([0] + [get_viewing_distance(row, i, -1) for i in range(len(row)-1, 0, -1)])[::-1]
+
+    return right_viewing_distances * left_viewing_distances
+
+
+def get_scenic_scores(tree_heights):
+    row_viewing_distance_products = np.array([get_viewing_distance_products(row) for row in tree_heights])
+    column_viewing_distance_products = np.array([get_viewing_distance_products(row) for row in tree_heights.transpose()])
+
+    return row_viewing_distance_products * column_viewing_distance_products
+
+
 with open("PuzzleInput8") as f:
     grid_array = np.array([list(d) for d in f.read().split("\n")]).astype(int)
 
@@ -44,3 +72,16 @@ vertical_visible_trees = update_visible_trees(grid_array.transpose(), vertical_v
 visible_tree_count = np.logical_or(horizontal_visible_trees, vertical_visible_trees).sum()
 
 print(visible_tree_count)
+
+print(get_scenic_scores(grid_array))
+
+print([get_viewing_distance([1, 4, 2, 5, 5, 4, 4, 4, 3, 2, 1, 6, 6, 6, 7, 4, 8], i, 1) for i in range(0, 16)])
+print([get_viewing_distance([1, 4, 2, 5, 5, 4, 4, 4, 3, 2, 1, 6, 6, 6, 7, 4, 8], i, -1) for i in range(16, 0, -1)])
+
+print(np.array([get_viewing_distance([3, 0, 3, 7, 3], i, 1) for i in range(0, len([3, 0, 3, 7, 3])-1)] + [0]))
+print(np.array(np.array([0] + [get_viewing_distance([3, 0, 3, 7, 3], i, -1) for i in range(len([3, 0, 3, 7, 3])-1, 0, -1)])))
+
+
+
+
+
