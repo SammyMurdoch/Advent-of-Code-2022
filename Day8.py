@@ -60,26 +60,26 @@ def get_scenic_scores(tree_heights):
 
 with open("PuzzleInput8") as f:
     grid_array = np.array([list(d) for d in f.read().split("\n")]).astype(int)
+#
+# horizontal_visible_trees = np.full(grid_array.shape, False)
+# vertical_visible_trees = np.full(grid_array.shape, False)
+#
+# side_length = horizontal_visible_trees.shape[0]
+#
+# horizontal_visible_trees = update_visible_trees(grid_array, horizontal_visible_trees)
+# vertical_visible_trees = update_visible_trees(grid_array.transpose(), vertical_visible_trees).transpose()
+#
+# visible_tree_count = np.logical_or(horizontal_visible_trees, vertical_visible_trees).sum()
+#
+# print(visible_tree_count)
 
-horizontal_visible_trees = np.full(grid_array.shape, False)
-vertical_visible_trees = np.full(grid_array.shape, False)
-
-side_length = horizontal_visible_trees.shape[0]
-
-horizontal_visible_trees = update_visible_trees(grid_array, horizontal_visible_trees)
-vertical_visible_trees = update_visible_trees(grid_array.transpose(), vertical_visible_trees).transpose()
-
-visible_tree_count = np.logical_or(horizontal_visible_trees, vertical_visible_trees).sum()
-
-print(visible_tree_count)
-
-print(get_scenic_scores(grid_array))
+# print(get_scenic_scores(grid_array))
 
 print([get_viewing_distance([1, 4, 2, 5, 5, 4, 4, 4, 3, 2, 1, 6, 6, 6, 7, 4, 8], i, 1) for i in range(0, 16)])
-print([get_viewing_distance([1, 4, 2, 5, 5, 4, 4, 4, 3, 2, 1, 6, 6, 6, 7, 4, 8], i, -1) for i in range(16, 0, -1)])
+print([get_viewing_distance([1, 4, 2, 5, 5, 4, 4, 4, 3, 2, 1, 6, 6, 6, 7, 4, 8], i, -1) for i in range(16, 0, -1)][::-1])
 
-print(np.array([get_viewing_distance([3, 0, 3, 7, 3], i, 1) for i in range(0, len([3, 0, 3, 7, 3])-1)] + [0]))
-print(np.array(np.array([0] + [get_viewing_distance([3, 0, 3, 7, 3], i, -1) for i in range(len([3, 0, 3, 7, 3])-1, 0, -1)])))
+print(np.array([get_viewing_distance([3, 0, 3, 7, 3], i, 1) for i in range(0, 4)] + [0]))
+print(np.array(np.array([0] + [get_viewing_distance([3, 0, 3, 7, 3], i, -1) for i in range(4, 0, -1)])))
 
 
 

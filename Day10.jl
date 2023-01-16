@@ -7,3 +7,5 @@ for instruction in lines
     print(instruction)
 
 end
+
+print("hi")
